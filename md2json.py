@@ -8,6 +8,7 @@ that will create a slideshow.
 
 import os
 import sys
+import json
 
 import getopt
 
@@ -22,12 +23,13 @@ class Mark2Json:
         """ Process a file of rest and return json """
 
         data = []
-        for line infile:
+        for line in infile:
             record = {}
-            if line.startswith('#')
+            if line.startswith('#'):
                 record['caption'] = line[1:].strip()
 
-            data.append(record)
+            if record:
+                data.append(record)
 
         return json.dumps(data)
 
@@ -36,5 +38,5 @@ if __name__ == '__main__':
 
     mark2json = Mark2Json()
 
-    return mark2json.interpret(sys.stdin.read())
+    print(mark2json.interpret(sys.stdin))
 
