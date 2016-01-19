@@ -6,7 +6,10 @@ TODO: would be nice if it did not give eog focus.
 import os
 import time
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
+
+FONT = '/usr/share/fonts/TTF/Vera.ttf'
+FONTSIZE = 24
 
 class SlideShow:
 
@@ -14,6 +17,7 @@ class SlideShow:
 
         self.pos = 0
         self.cache = 'show'
+        self.font = ImageFont.truetype(FONT, FONTSIZE)
 
     def interpret(self, msg):
         """ Load input """
@@ -47,7 +51,7 @@ class SlideShow:
         if image_file:
             img = Image.open(image_file)
         else:
-            img = Image.new('RGB', (600, 400))
+            img = Image.new('RGB', (600, 400), (255,255,255))
 
         image = self.add_caption(img, caption)
 
@@ -70,7 +74,12 @@ class SlideShow:
         width, height = image.size
         draw = ImageDraw.Draw(image)
 
-        draw.text((int(width/10), int(height/20)), caption)
+
+        print('fontsize', int(height/20))
+        draw.font = ImageFont.truetype(FONT, int(height/20))
+
+        draw.font = self.font
+        draw.text((int(width/10), int(height/20)), caption, fill=(0,0,0))
 
         return image
 
