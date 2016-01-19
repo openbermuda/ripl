@@ -12,7 +12,7 @@ import json
 
 import getopt
 
-class Mark2Json:
+class Mark2Py:
 
     def __init__(self):
 
@@ -26,7 +26,7 @@ class Mark2Json:
         for record in self.generate_records(infile):
             data.append(record)
 
-        return json.dumps(data)
+        return data
 
             
     def generate_records(self, infile):
@@ -35,7 +35,6 @@ class Mark2Json:
             record = {}
 
             # any Markdown heading is just a caption, no image
-            print(line)
             if line.startswith('#'):
                 print(line)
                 record['caption'] = line[1:].strip()
@@ -73,14 +72,8 @@ class Mark2Json:
                 yield record
 
 
-x = Mark2Json()
+x = Mark2Py()
 
 interpret = x.interpret
             
-
-if __name__ == '__main__':
-
-    mark2json = Mark2Json()
-
-    print(mark2json.interpret(sys.stdin))
 
