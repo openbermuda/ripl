@@ -5,6 +5,7 @@ TODO: would be nice if it did not give eog focus.
 """
 import os
 import time
+import subprocess
 
 from PIL import Image, ImageDraw
 
@@ -15,12 +16,13 @@ class SlideShow:
         self.slides = []
         self.pos = 0
         self.wait = 5
+        self.feh = None
 
     def interpret(self, msg):
         """ Create a slide show """
         
         for item in msg:
-            self.slides.append(item)
+            self.add(item)
 
     def add(self, slide):
 
@@ -28,67 +30,38 @@ class SlideShow:
 
     def next(self):
 
-        self.show()
-
-        self.pos += 1
-        if self.pos >= len(self.slides):
-            self.pos = 0
+        # send feh a signal to move to the next slide
+        os.system('kill -s 10 %d' % self.feh.pid)
 
     def show(self):
-
-        slide = self.slides[self.pos]
-        image = slide.get('image')
-        caption = slide.get('caption')
-
-        if caption is None:
-            # use image name, without the suffic
-            caption = os.path.splitext(image)[0]
-
-            # convert _ to ' '
-            caption = caption.replace('_', ' ')
- 
-        # create image
-        image_file = self.create_image(image, caption)
         
-        os.system('eog -w %s &' % image_file)
+        #os.system('eog -g -w %s &' % image_file)
+        #os.system('feh -F %s &' % image_file)
+        slides = ' '.join([x.get('image', '') for x in self.slides])
+        cmd = 'feh -F --scale-down %s' % slides
+        self.feh = subprocess.Popen(cmd.split(' '))
 
-        # fixme, need default time
-        # find all slides with 
-        wait = slide.get('time', self.wait)
-        time.sleep(wait)
+    def set_duration(self, duration):
+        """ Calculate how long each slide should show """
+        fixed = sum(int(x.get('time', 0)) for x in self.slides)
 
-    def create_image(self, image_file, caption):
-        """ Create an image with a caption """
-        if image_file:
-            img = Image.open(image_file)
-        else:
-            img = Image.new('RGB', (600, 400))
+        nfixed = len([x for x in self.slides if x.get('time', 0) > 0])
 
-        name = self.add_caption(img, caption)
+        unfixed = len(self.slides) - nfixed
 
-        return name
-
-    def add_caption(self, image, caption):
-        """ Add a caption to the image """
-
-        width, height = image.size
-        draw = ImageDraw.Draw(image)
-
-        draw.text((int(width/10), int(height/20)), caption)
-
-        name = "show/slide%d.png" % self.pos
-        
-        with open(name, 'w') as slide:
-            image.save(name)
-
-        print(name)
-        return name
+        self.wait = max(5, int(duration / unfixed))
 
     def run(self):
         """ Run the show """
 
-        while True:
+        self.show()
+        for image in self.slides:
+            wait = image.get('time', 0)
+            wait = max(self.wait, wait)
+            print('waiting %d seconds' % wait)
+            time.sleep(wait)
             self.next()
+
         
 
 

@@ -11,7 +11,7 @@ import show
 
 mj = md2py
 
-msg = open('../stories/talk.rst')
+msg = open('show/slides.txt')
 
 slides = mj.interpret(msg)
 
@@ -20,5 +20,9 @@ print(slides[:5])
 ss = show.SlideShow()
 
 ss.interpret(slides)
+
+ss.set_duration(30)
+
+print('wait:', ss.wait)
 
 ss.run()
