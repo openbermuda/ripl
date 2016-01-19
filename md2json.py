@@ -73,6 +73,11 @@ class Mark2Json:
                 yield record
 
 
+x = Mark2Json()
+
+interpret = x.interpret
+            
+
 if __name__ == '__main__':
 
     mark2json = Mark2Json()
