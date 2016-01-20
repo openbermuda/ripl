@@ -7,18 +7,28 @@ Stuff in here probably belongs elsewhere.
 
 # fixme, make it md2py 
 import md2py
+import json2py
 import caption
 import show
-import argv
+import sys
+import os
+
+infile = os.path.expanduser('~/devel/blog/stories/talk.rst')
 
 folder = '.'
-if argv[1:]:
-    folder = argv[1]
+if sys.argv[1:]:
+    folder = sys.argv[1]
     
+if sys.argv[2:]:
+    infile = sys.argv[2]
 
 mj = md2py
 
-msg = open('../stories/talk.rst')
+msg = open(infile)
+
+if infile.endswith('json'):
+    mj = json2py
+    msg = open(infile).read()
 
 slides = mj.interpret(msg)
 
