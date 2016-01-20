@@ -22,7 +22,22 @@ mark2rest and rest2mark
 
 rest2json and json2rest
 
-py2json and json2py
+py2json and json2py.  these are done coutesy of import json.
 
 Chaining converstions and examining information loss.
+
+stories/talk.rst this is markdown not rest .. hmm
+
+Spares: would be good to embed them below captions.  The blank white
+slides don't really work.
+
+Multi-line captions?
+
+Start slide.  Would be good to have one.
+
+Need to truncate captions from filenames.  Just take filename without
+the suffix or folder path.
+
+Need to deal with rotation problems on some images - deep joy.
+
 
