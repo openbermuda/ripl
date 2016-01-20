@@ -4,12 +4,13 @@ Create slides for a slideshow
 TODO: would be nice if it did not give eog focus.
 """
 import os
-import time
 
 from PIL import Image, ImageDraw, ImageFont
 
 FONT = '/usr/share/fonts/TTF/Vera.ttf'
-FONTSIZE = 24
+FONTSIZE = 36
+WIDTH = 1024
+HEIGHT = 768
 
 class SlideShow:
 
@@ -50,8 +51,13 @@ class SlideShow:
         suffix = 'png'
         if image_file:
             img = Image.open(image_file)
+            width, height = img.size
+            ratio = width/WIDTH
+            img = img.resize((int(width // ratio),
+                              int(height // ratio)),
+                             Image.ANTIALIAS)
         else:
-            img = Image.new('RGB', (600, 400), (255,255,255))
+            img = Image.new('RGB', (WIDTH, HEIGHT), (255,255,255))
 
         image = self.add_caption(img, caption)
 
@@ -74,12 +80,10 @@ class SlideShow:
         width, height = image.size
         draw = ImageDraw.Draw(image)
 
-
-        print('fontsize', int(height/20))
-        draw.font = ImageFont.truetype(FONT, int(height/20))
+        draw.font = self.font
 
         draw.font = self.font
-        draw.text((int(width/10), int(height/20)), caption, fill=(0,0,0))
+        draw.text((width // 10, height//20), caption, fill=(0,0,0))
 
         return image
 
