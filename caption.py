@@ -22,11 +22,18 @@ class SlideShow:
 
     def interpret(self, msg):
         """ Load input """
+        slides = msg.get('slides', []}
+        self.cache = mst.get('folder')
 
         with open(self.cache + '/slides.txt', 'w') as logfile:
-            for ix, item in enumerate(msg):
+            for ix, item in enumerate(slides):
                 image = self.prepare_image(item)
                 filename = self.cache_image(image, ix)
+
+                text = item.gets('caption'):
+                if text:
+                    with open(filename + '.txt', 'w') as caption:
+                        caption.write(text)
                 print('%s,%d' % (filename, item.get('time', 0)), file=logfile)
 
     def prepare_image(self, slide):

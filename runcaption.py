@@ -4,30 +4,27 @@ Stuff in here probably belongs elsewhere.
 """
 
 # run script from galleries folder
-import sys
 
 # fixme, make it md2py 
 import md2py
+import caption
 import show
+import argv
 
 folder = '.'
-if len(sys.argv) > 1:
-    folder = sys.argv[1]
+if argv[1:]:
+    folder = argv[1]
+    
 
 mj = md2py
 
-msg = open('show/slides.txt')
+msg = open('../stories/talk.rst')
 
 slides = mj.interpret(msg)
 
 print(slides[:5])
 
-ss = show.SlideShow()
+ss = caption.SlideShow()
+ss.interpret(dict(slides=slides, folder=folder))
 
-ss.interpret(dict(slides=slides, captions=folder))
 
-ss.set_duration(30)
-
-print('wait:', ss.wait)
-
-ss.run()
