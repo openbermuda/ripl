@@ -22,15 +22,16 @@ class SlideShow:
 
     def interpret(self, msg):
         """ Load input """
-        slides = msg.get('slides', []}
-        self.cache = mst.get('folder')
+        slides = msg.get('slides', [])
+        self.cache = msg.get('folder')
+        self.gallery = msg.get('gallery', '..')
 
         with open(self.cache + '/slides.txt', 'w') as logfile:
             for ix, item in enumerate(slides):
                 image = self.prepare_image(item)
                 filename = self.cache_image(image, ix)
 
-                text = item.gets('caption'):
+                text = item.get('caption', '')
                 if text:
                     with open(filename + '.txt', 'w') as caption:
                         caption.write(text)
@@ -47,6 +48,9 @@ class SlideShow:
 
             # convert _ to ' '
             caption = caption.replace('_', ' ')
+
+            # save the caption
+            slide['caption'] = caption
  
         # create image
         image_file = self.create_image(image, caption)
@@ -57,7 +61,7 @@ class SlideShow:
         """ Create an image with a caption """
         suffix = 'png'
         if image_file:
-            img = Image.open(image_file)
+            img = Image.open(os.path.join(self.gallery, image_file))
             width, height = img.size
             ratio = width/WIDTH
             img = img.resize((int(width // ratio),
@@ -66,7 +70,8 @@ class SlideShow:
         else:
             img = Image.new('RGB', (WIDTH, HEIGHT), (255,255,255))
 
-        image = self.add_caption(img, caption)
+        #image = self.add_caption(img, caption)
+        image = img
 
         return image
 
