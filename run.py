@@ -8,15 +8,25 @@ import sys
 
 # fixme, make it md2py 
 import md2py
+import json2py
 import show
 
 folder = '.'
+infile = 'slides.txt'
+
 if len(sys.argv) > 1:
     folder = sys.argv[1]
 
+if len(sys.argv) > 2:
+    infile = sys.argv[2]
+
+msg = open(infile)
+
 mj = md2py
 
-msg = open('show/slides.txt')
+if infile.endswith('json'):
+    mj = json2py
+    msg = open(infile).read()
 
 slides = mj.interpret(msg)
 
