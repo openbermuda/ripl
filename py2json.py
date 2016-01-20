@@ -10,7 +10,7 @@ class Py2Json:
 
     def interpret(self, msg):
 
-        return json.dumps(msg)
+        return json.dumps(msg, indent=4)
 
 x = Py2Json()
 
