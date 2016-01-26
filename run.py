@@ -11,14 +11,24 @@ import md2py
 import json2py
 import show
 
-folder = '.'
-infile = 'slides.txt'
+import argparse
 
-if len(sys.argv) > 1:
-    folder = sys.argv[1]
+parser = argparse.ArgumentParser()
 
-if len(sys.argv) > 2:
-    infile = sys.argv[2]
+parser.add_argument('-t', '--time',
+                    default=10, type=int,
+                    help='time for slideshow in minutes')
+parser.add_argument('-f', '--folder',
+                    default='.',
+                    help="folder of slides")
+parser.add_argument('-s', '--slides',
+                    default='slides.txt',
+                    help='list of slides to show')
+
+args = parser.parse_args()
+
+folder = args.folder
+infile = args.slides
 
 msg = open(infile)
 
@@ -36,7 +46,7 @@ ss = show.SlideShow()
 
 ss.interpret(dict(slides=slides, captions=folder))
 
-ss.set_duration(30)
+ss.set_duration(args.time * 60)
 
 print('wait:', ss.wait)
 

@@ -55,12 +55,13 @@ class SlideShow:
 
         unfixed = len(self.slides) - nfixed
 
-        self.wait = max(5, int(duration / unfixed))
+        self.wait = max(1, int(duration / unfixed))
 
     def run(self):
         """ Run the show """
 
         self.show()
+        input('Press any key to start')
         for image in self.slides:
             wait = image.get('time', 0)
             wait = max(self.wait, wait)
