@@ -43,7 +43,7 @@ class SlideShow:
         #os.system('eog -g -w %s &' % image_file)
         #os.system('feh -F %s &' % image_file)
         slides = ' '.join([x.get('image', '') for x in self.slides])
-        cmd = 'feh -F --scale-down --caption-path %s %s' % (
+        cmd = 'feh --scale-down --caption-path %s %s' % (
             self.captions, slides)
         self.feh = subprocess.Popen(cmd.split(' '))
 
@@ -62,6 +62,7 @@ class SlideShow:
 
         self.show()
         input('Press any key to start')
+        
         for image in self.slides:
             wait = image.get('time', 0)
             wait = max(self.wait, wait)
