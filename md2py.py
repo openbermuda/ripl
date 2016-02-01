@@ -38,6 +38,8 @@ class Mark2Py:
             if line.startswith('#'):
                 print(line)
                 record['caption'] = line[1:].strip()
+
+                record['caption'] += self.extract_caption(infile)
                 yield record
                 continue
 
@@ -70,6 +72,23 @@ class Mark2Py:
             # yield it if we have anything
             if record:
                 yield record
+
+
+    def extract_caption(self, infile):
+
+        caption = []
+
+        for line in infile:
+            if line.startswith('END_CAPTION'):
+                break
+
+            caption.append(line)
+
+        return '\n'.join(caption)            
+                
+                
+                
+                
 
 
 x = Mark2Py()

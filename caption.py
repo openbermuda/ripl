@@ -69,8 +69,8 @@ class SlideShow:
                              Image.ANTIALIAS)
         else:
             img = Image.new('RGB', (WIDTH, HEIGHT), 'black')
-
-        #image = self.add_caption(img, caption)
+            image = self.add_caption(img, caption)
+            
         image = img
 
         return image
