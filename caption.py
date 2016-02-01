@@ -86,16 +86,20 @@ class SlideShow:
         return name
 
 
-    def add_caption(self, image, caption):
+    def add_caption(self, image, caption, colour=None):
         """ Add a caption to the image """
 
+        if colour is None:
+            colour = "white"
+    
         width, height = image.size
         draw = ImageDraw.Draw(image)
 
         draw.font = self.font
 
         draw.font = self.font
-        draw.text((width // 10, height//20), caption, fill=(0,0,0))
+        draw.text((width // 10, height//20), caption,
+                  fill=colour)
 
         return image
 
