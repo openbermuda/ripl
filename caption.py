@@ -32,6 +32,11 @@ class SlideShow:
                 filename = self.cache_image(image, ix)
 
                 text = item.get('caption', '')
+
+                # do not write text for heading images
+                if item.get('heading'):
+                    text = ''
+                    
                 if text:
                     with open(filename + '.txt', 'w') as caption:
                         caption.write(text)

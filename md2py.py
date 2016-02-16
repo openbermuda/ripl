@@ -46,30 +46,47 @@ class Mark2Py:
 
         return dict with line=input, depth=n
         """
-        depth = 0
-
         pound = '#'
         
         for line in infile:
 
-            if line.startswith(pound):
-                depth = self.hash_count(line)
+            heading = 0
 
-            yield dict(line=line, depth=depth)
+            if line.startswith(pound):
+                heading = self.hash_count(line)
+
+            yield dict(line=line, heading=heading)
 
 
     def generate_records(self, infile):
         """ Process a file of rest and yield dictionaries """
-        for line in infile:
-            record = {}
 
+        state = 0
+        record = {}
+
+        for item in self.generate_lines(infile):
+
+            line = item['line']
+            heading = item['heading']
+            
             # any Markdown heading is just a caption, no image
-            if line.startswith('#'):
+            if heading:
                 print(line)
+                record['heading'] = True
                 record['caption'] = line[1:].strip()
 
-                record['caption'] += self.extract_caption(infile)
-                yield record
+                state = 'caption'
+                continue
+
+            if not line[0].isspace():
+                # at a potential image
+                if state == 'caption':
+                    yield record
+                    record = {}
+                    state = 0
+
+            if state == 'caption':
+                record['caption'] += '\n' + line[:-1]
                 continue
 
             fields = line.split(',')
@@ -101,22 +118,9 @@ class Mark2Py:
             # yield it if we have anything
             if record:
                 yield record
+                record = {}
 
 
-    def extract_caption(self, infile):
-
-        caption = []
-
-        for line in infile:
-            if line.startswith('END_CAPTION'):
-                break
-
-            caption.append(line)
-
-        return '\n'.join(caption)            
-                
-                
-                
                 
 
 
