@@ -28,7 +28,36 @@ class Mark2Py:
 
         return data
 
-            
+    def hash_count(self, line):
+        """ Count hashes at start of line
+
+        Sad but true..
+        """
+        count = 0
+        for c in line:
+            if c != '#':
+                break
+            count += 1
+
+        return count
+
+    def generate_lines(self, infile):
+        """ Split file into lines
+
+        return dict with line=input, depth=n
+        """
+        depth = 0
+
+        pound = '#'
+        
+        for line in infile:
+
+            if line.startswith(pound):
+                depth = self.hash_count(line)
+
+            yield dict(line=line, depth=depth)
+
+
     def generate_records(self, infile):
         """ Process a file of rest and yield dictionaries """
         for line in infile:
