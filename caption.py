@@ -29,7 +29,7 @@ class SlideShow:
         with open(self.cache + '/slides.txt', 'w') as logfile:
             for ix, item in enumerate(slides):
                 image = self.prepare_image(item)
-                filename = self.cache_image(image, ix)
+                filename = self.cache_image(item, image)
 
                 text = item.get('caption', '')
 
@@ -81,9 +81,20 @@ class SlideShow:
         return image
 
 
-    def cache_image(self, image, ix):
+    def cache_image(self, item, image):
 
-        name = "%s/slide%d.png" % (self.cache, ix)
+        
+        
+        #name = "%s/slide%d.png" % (self.cache, ix)
+
+        caption = item.get('image')
+        if caption is None:
+            caption = item.get('caption').split('\n')[0]
+            
+        caption = caption.split('/')[-1]
+        caption = caption.replace(' ', '_')
+        
+        name = "%s/%s.png" % (self.cache, caption)
         
         with open(name, 'w') as slide:
             image.save(name)

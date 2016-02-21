@@ -66,7 +66,8 @@ class SlideShow:
         for image in self.slides:
             wait = image.get('time', 0)
             wait = max(self.wait, wait)
-            print('waiting %d seconds' % wait)
+            print('waiting %d seconds %s' % (
+                wait, image.get('image', '')))
             time.sleep(wait)
             self.next()
 
