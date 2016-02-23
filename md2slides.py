@@ -21,9 +21,11 @@ class Mark2Slide:
     def hash_count(self, line, pound=None):
         """ Count hashes (or other run of chars) at start of line
 
+        >>> x = Mark2Slide()
         >>> x.hash_count('### hello')
         3
 
+        >>> x = Mark2Slide()
         >>> x.hash_count(' hello', ' ')
         1
 
@@ -53,7 +55,7 @@ class Mark2Slide:
             indent = self.hash_count(line, pound=' ')
 
             yield dict(line=line.strip(),
-                       heading=heading,
+                       heading==heading,
                        indent=indent)
 
 
@@ -78,7 +80,7 @@ class Mark2Slide:
                     
                 rows = []
                 slide = dict(
-                    heading = line,
+                    heading = dict(text=line),
                     rows = rows)
                 continue
 
@@ -137,9 +139,9 @@ class Mark2Slide:
         return row
 
 
-#x = Mark2Py()
+x = Mark2Slide()
 
-#interpret = x.interpret
+interpret = x.interpret
 
 if __name__ == '__main__':
 
