@@ -35,8 +35,6 @@ class SlideShow:
             for slide in slides:
                 image = self.layout(slide)
 
-                continue
-                
                 heading = slide['heading']
                 filename = self.cache_image(heading['text'],
                                             image)
@@ -63,8 +61,14 @@ class SlideShow:
 
     def draw_slide(self, draw, slide):
 
-        print(slide['heading']['text'])
+        heading = slide['heading']
+        print(heading['text'])
         rows = slide['rows']
+
+        
+        left, top = heading['top'], heading['left']
+        
+        draw.text((left, top), heading['text'], fill='white')
 
         for row in rows:
             for item in row['items']:
@@ -79,9 +83,39 @@ class SlideShow:
                 text = item.get('text')
 
                 if text is not None:
-                    draw.text((top, left), text, fill='white')
+                    draw.text((left, top), text, fill='white')
+
+                image = item['image']
+                if image:
+                    self.draw_image(draw, item)
                       
             print()
+
+    def draw_image(self, draw, item):
+        """ Add an image to the image """
+        top, left = item['top'], item['left']
+        width, height = item['width'], item['height']
+        image_file = item['image']
+        
+        img = Image.open(os.path.join(self.gallery, image_file))
+
+        iwidth, iheight = img.size
+
+        wratio = width / iwidth
+        hratio = hwidth / iheight
+
+        ratio = min(wratio, hratio)
+        
+        img = img.resize((int(width // ratio),
+                          int(height // ratio)),
+                         Image.ANTIALIAS)
+
+        # Adjust top, left for actual size of image so centre
+        # is in the same place as it would have been
+        
+        # Now need to draw the image
+
+        
 
     def vertical_layout(self, draw, slide):
         """ Augment slide with vertical layout info """
@@ -268,16 +302,21 @@ class SlideShow:
     def slugify(self, name):
         """ Turn name into a slug suitable for an image file name """
         slug = ''
-        for char in name.lower():
+        last = ''
+        for char in name.replace('#', '').lower().strip():
             if not char.isalnum():
                 char = '_'
 
-            slug += char
+            if last == '_' and char == '_':
+                continue
 
+            slug += char
+            last = char
+
+        print('SLUG:', slug)
         return slug
     
     def cache_image(self, label, image):
-
         
         name = "%s/%s.png" % (self.cache, self.slugify(label))
         
@@ -285,11 +324,3 @@ class SlideShow:
             image.save(name)
 
         return name
-
-
-
-        
-
-
-
-    
