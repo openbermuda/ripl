@@ -55,11 +55,13 @@ class SlideShow:
         
         self.horizontal_layout(draw, slide)
 
-        self.draw_slide(draw, slide)
+        self.draw_slide_text(draw, slide)
+
+        self.draw_slide_images(image, slide)
 
         return image
 
-    def draw_slide(self, draw, slide):
+    def draw_slide_text(self, draw, slide):
 
         heading = slide['heading']
         print(heading['text'])
@@ -82,16 +84,43 @@ class SlideShow:
 
                 text = item.get('text')
 
-                if text is not None:
-                    draw.text((left, top), text, fill='white')
+                if not text:
+                    continue
 
-                image = item['image']
-                if image:
-                    self.draw_image(draw, item)
+                draw.text((left, top), text, fill='white')
+
                       
             print()
 
-    def draw_image(self, draw, item):
+    def draw_slide_images(self, image, slide):
+
+        heading = slide['heading']
+        print(heading['text'])
+        rows = slide['rows']
+        
+        left, top = heading['top'], heading['left']
+        
+        for row in rows:
+            for item in row['items']:
+                top, left = item['top'], item['left']
+                
+                print('tl', item['top'], item['left'])
+                print('wh', item['width'], item['height'])
+
+                print(item.get('text', ''))
+                print(item.get('image', ''))
+
+                text = item.get('text')
+
+                image_file = item.get('image')
+
+                if not image_file: continue
+
+                self.draw_image(image, item)
+                      
+            print()
+
+    def draw_image(self, image, item):
         """ Add an image to the image """
         top, left = item['top'], item['left']
         width, height = item['width'], item['height']
@@ -102,19 +131,33 @@ class SlideShow:
         iwidth, iheight = img.size
 
         wratio = width / iwidth
-        hratio = hwidth / iheight
+        hratio = height / iheight
+
+        print(width, height, iwidth, iheight)
 
         ratio = min(wratio, hratio)
-        
-        img = img.resize((int(width // ratio),
-                          int(height // ratio)),
-                         Image.ANTIALIAS)
+        print(wratio, hratio, ratio)
 
+        print('resizing %s %6.4f' % (image_file, ratio))
+        
+        img = img.resize((int(iwidth * ratio),
+                          int(iheight * ratio)),
+                         Image.ANTIALIAS)
+        
+
+        # get updated image size
+        iwidth, iheight = img.size
+        
         # Adjust top, left for actual size of image so centre
         # is in the same place as it would have been
         
-        # Now need to draw the image
-
+        top += (height - iheight) // 2
+        left += (width - iwidth) // 2
+        
+        # now paste the image
+        print('pasting %s' % image_file)
+        print(left, top)
+        image.paste(img, (left, top))
         
 
     def vertical_layout(self, draw, slide):
@@ -196,7 +239,7 @@ class SlideShow:
                     item['top'] = text_top
                 else:
                     # image
-                    item['top'] = top
+                    item['top'] = text_top
                     item['height'] = image_height
                 
             top += row.get('height', 0) + padding
@@ -221,10 +264,12 @@ class SlideShow:
 
             items = row['items']
             
-            widths = [x.get('width', 0) for x in items]
+            used_width = sum(x.get('width', 0) for x in items)
 
-            available_width = (sum(widths) + 
-                ((1 + len(widths)) * padding))
+            print('used_width', used_width)
+            
+            available_width = WIDTH - (
+                used_width + ((1 + len(items)) * padding))
 
             if images:
                 image_width = available_width // images
