@@ -239,9 +239,11 @@ class SlideShow:
                     item['top'] = text_top
                 else:
                     # image
-                    item['top'] = text_top
+                    item['top'] = top
                     item['height'] = image_height
-                
+                    row['height'] = image_height
+
+            
             top += row.get('height', 0) + padding
 
         return
