@@ -7,10 +7,6 @@ that will create a slideshow.
 """
 
 import os
-import sys
-import json
-
-import getopt
 
 class Mark2Py:
 
@@ -19,7 +15,7 @@ class Mark2Py:
         pass
 
     def interpret(self, infile):
-        """ Process a file of rest and return json """
+        """ Process a file of rest and return list of dicts """
 
         data = []
 
