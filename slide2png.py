@@ -50,27 +50,36 @@ class SlideShow:
 
         image = Image.new('RGB', (WIDTH, HEIGHT), 'black')
         draw = ImageDraw.Draw(image)
-
+        draw.font = self.font
+        
         self.vertical_layout(draw, slide)
-        print(slide)
+        #print(slide)
         
         self.horizontal_layout(draw, slide)
 
-        image = self.draw_slide(draw, slide)
+        self.draw_slide(draw, slide)
 
         return image
 
     def draw_slide(self, draw, slide):
 
+        print(slide['heading']['text'])
         rows = slide['rows']
 
         for row in rows:
             for item in row['items']:
+                top, left = item['top'], item['left']
+                
                 print('tl', item['top'], item['left'])
                 print('wh', item['width'], item['height'])
 
                 print(item.get('text', ''))
                 print(item.get('image', ''))
+
+                text = item.get('text')
+
+                if text is not None:
+                    draw.text((top, left), text, fill='white')
                       
             print()
 
@@ -79,7 +88,7 @@ class SlideShow:
         padding = self.padding
         heading = slide['heading']
 
-        width, height = draw.textsize(heading['text'], self.font)
+        width, height = draw.textsize(heading['text'])
         top = padding
         left = padding
 
@@ -112,7 +121,7 @@ class SlideShow:
                 
                 if text is None: continue
                     
-                width, height = draw.textsize(text, self.font)
+                width, height = draw.textsize(text)
 
                 item.update(dict(
                     width = width,
@@ -149,11 +158,12 @@ class SlideShow:
                 text_top += image_text_offset
 
             for item in row['items']:
-                if item.get('text'):
+                if item.get('text') is not None:
                     item['top'] = text_top
                 else:
                     # image
                     item['top'] = top
+                    item['height'] = image_height
                 
             top += row.get('height', 0) + padding
 
@@ -276,23 +286,6 @@ class SlideShow:
 
         return name
 
-
-    def add_caption(self, image, caption, colour=None):
-        """ Add a caption to the image """
-
-        if colour is None:
-            colour = "white"
-    
-        width, height = image.size
-        draw = ImageDraw.Draw(image)
-
-        draw.font = self.font
-
-        draw.font = self.font
-        draw.text((width // 10, height//20), caption,
-                  fill=colour)
-
-        return image
 
 
         
