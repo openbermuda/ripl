@@ -34,6 +34,9 @@ class SlideShow:
         with open(self.cache + '/slides.txt', 'w') as logfile:
             for slide in slides:
                 image = self.layout(slide)
+
+                continue
+                
                 heading = slide['heading']
                 filename = self.cache_image(heading['text'],
                                             image)
@@ -57,12 +60,26 @@ class SlideShow:
 
         return image
 
+    def draw_slide(self, draw, slide):
+
+        rows = slide['rows']
+
+        for row in rows:
+            for item in row['items']:
+                print('tl', item['top'], item['left'])
+                print('wh', item['width'], item['height'])
+
+                print(item.get('text', ''))
+                print(item.get('image', ''))
+                      
+            print()
+
     def vertical_layout(self, draw, slide):
         """ Augment slide with vertical layout info """
         padding = self.padding
         heading = slide['heading']
 
-        width, height = draw.textsize(heading)
+        width, height = draw.textsize(heading['text'], self.font)
         top = padding
         left = padding
 
@@ -76,6 +93,7 @@ class SlideShow:
         top += height + padding
 
         # count how many rows just text and how many have image
+        rows = slide['rows']
         text_rows = 0
         image_rows = 0
 
@@ -86,7 +104,7 @@ class SlideShow:
             row_height = 0
 
             images = 0
-            for item in row:
+            for item in row['items']:
                 if item.get('image'):
                     images += 1
 
@@ -94,7 +112,7 @@ class SlideShow:
                 
                 if text is None: continue
                     
-                width, height = draw.textsize(text)
+                width, height = draw.textsize(text, self.font)
 
                 item.update(dict(
                     width = width,
@@ -130,7 +148,7 @@ class SlideShow:
             if images:
                 text_top += image_text_offset
 
-            for item in row:
+            for item in row['items']:
                 if item.get('text'):
                     item['top'] = text_top
                 else:
@@ -141,9 +159,45 @@ class SlideShow:
 
         return
 
-    def horizontal_layout(self, draw, rows):
+    def horizontal_layout(self, draw, slide):
         """ Augment slide with horizontal layout info """
-        pass
+        padding = self.padding
+        heading = slide['heading']
+
+        top = padding
+        left = padding
+
+        top += heading['height'] + padding
+
+        rows = slide['rows']
+
+        for row in rows:
+
+            images = row.get('images', 0)
+
+            items = row['items']
+            
+            widths = [x.get('width', 0) for x in items]
+
+            available_width = (sum(widths) + 
+                ((1 + len(widths)) * padding))
+
+            if images:
+                image_width = available_width // images
+
+            # OK, now set left for all items and image_width for images
+            left = padding
+            for item in row['items']:
+
+                if item.get('image'):
+                    item['width'] = image_width
+
+                item['left'] = left    
+
+                left += item['width'] + padding
+
+        return
+
 
     def get_image_height(self, draw, text_rows, image_rows):
         padding = self.padding

@@ -55,7 +55,7 @@ class Mark2Slide:
             indent = self.hash_count(line, pound=' ')
 
             yield dict(line=line.strip(),
-                       heading==heading,
+                       heading=heading,
                        indent=indent)
 
 
@@ -90,8 +90,8 @@ class Mark2Slide:
 
             else:
                 # Just add the line of text
-                rows.append(dict(
-                    text=(' ' * indent) + line))
+                items = [dict(text=(' ' * indent) + line)]
+                rows.append(dict(items=items))
 
         if slide:
             yield slide
@@ -102,7 +102,7 @@ class Mark2Slide:
     def build_row(self, line):
         """ Line describes an image or images to show
 
-        Returns a list of image names or text items
+        Returns a dict with a list of dicts of image names or text items
 
         Examples:
 
@@ -116,7 +116,8 @@ class Mark2Slide:
 
         """
 
-        row = []
+        items = []
+        row = dict(items=items)
         fields = line.split(' ')
 
         image_exts = ['.png', '.jpg']
@@ -129,11 +130,11 @@ class Mark2Slide:
             ext = os.path.splitext(field)[-1]
 
             if ext.lower() in image_exts:
-                row.append(
+                items.append(
                     dict(image=field))
 
             else:
-                row.append(
+                items.append(
                     dict(text=field))
 
         return row
