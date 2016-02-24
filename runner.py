@@ -13,7 +13,7 @@ import sys
 import os
 
 infile = os.path.expanduser(
-    '~/devel/blog/stories/cat_modelling_with_snakes.md')
+    '~/devel/blog/stories/cat_modelling_with_python.md')
 
 folder = '.'
 if sys.argv[1:]:

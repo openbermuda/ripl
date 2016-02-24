@@ -67,21 +67,31 @@ class Mark2Slide:
         # each slide is a dict
         slide = {}
 
+        last_heading = 0
+
         for item in self.generate_lines(infile):
 
             line = item['line']
             heading = item['heading']
             indent = item['indent']
-            
+
             # Any heading is the heading for a new slide
             if heading:
-                if slide:
+
+                if slide and last_heading <= 1:
                     yield slide
+
+                last_heading = heading
                     
                 rows = []
                 slide = dict(
                     heading = dict(text=line),
                     rows = rows)
+
+                continue
+
+            # Any block with more than one hash is a comment
+            if last_heading > 1:
                 continue
 
             if indent == 0 and line:
