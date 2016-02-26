@@ -49,6 +49,10 @@ slides = mj.interpret(msg)
 
 print("Number of slides:", len(slides))
 
+print()
+print(slides[0]['image'])
+print()
+
 ss = show.SlideShow()
 
 ss.interpret(dict(slides=slides, captions=folder))
