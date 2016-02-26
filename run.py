@@ -47,7 +47,12 @@ if infile.endswith('json'):
 
 slides = mj.interpret(msg)
 
-print(slides[:5])
+print()
+print(slides[0].keys())
+print()
+
+print("Number of slides:", len(slides))
+
 
 ss = show.SlideShow()
 

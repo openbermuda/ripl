@@ -57,7 +57,7 @@ class SlideShow:
 
         self.draw_slide_text(draw, slide)
 
-        self.draw_slide_images(image, slide)
+        self.draw_slide_images(draw, slide, image)
 
         return image
 
@@ -92,7 +92,7 @@ class SlideShow:
                       
             print()
 
-    def draw_slide_images(self, image, slide):
+    def draw_slide_images(self, draw, slide, image):
 
         heading = slide['heading']
         print(heading['text'])
@@ -116,17 +116,42 @@ class SlideShow:
 
                 if not image_file: continue
 
-                self.draw_image(image, item)
+                source = self.find_image(item)
+                if source:
+                    self.draw_image(image, item, source)
+                else:
+                    self.draw.text(
+                        (left, top), text, fill='white')
+                        
                       
             print()
 
-    def draw_image(self, image, item):
+
+    def find_image(self, item):
+        """ Try and find the image file 
+
+        some magic here would be good.
+
+        FIXME move elsewhere and make so everyone can use.
+
+        interpreter that finds things?
+        """
+        image_file = item['image']
+
+        guess = os.path.join(self.gallery, image_file)
+        if os.path.exists(guess):
+            return guess
+
+        return None
+        
+
+    def draw_image(self, image, item, source):
         """ Add an image to the image """
         top, left = item['top'], item['left']
         width, height = item['width'], item['height']
         image_file = item['image']
         
-        img = Image.open(os.path.join(self.gallery, image_file))
+        img = Image.open(source)
 
         iwidth, iheight = img.size
 
