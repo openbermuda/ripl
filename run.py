@@ -5,6 +5,7 @@ Stuff in here probably belongs elsewhere.
 
 # run script from galleries folder
 import sys
+import time
 
 # fixme, make it md2py 
 import md2py
@@ -16,7 +17,7 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument('-t', '--time',
-                    default=10, type=int,
+                    default=0, type=int,
                     help='time for slideshow in minutes')
 parser.add_argument('-f', '--folder',
                     default='.',
@@ -24,11 +25,17 @@ parser.add_argument('-f', '--folder',
 parser.add_argument('-s', '--slides',
                     default='slides.txt',
                     help='list of slides to show')
+parser.add_argument('-w', '--wait',
+                    default=0, type=int,
+                    help='time to wait for slideshow')
+
 
 args = parser.parse_args()
 
 folder = args.folder
 infile = args.slides
+wait = args.wait
+
 
 msg = open(infile)
 
@@ -46,8 +53,11 @@ ss = show.SlideShow()
 
 ss.interpret(dict(slides=slides, captions=folder))
 
-ss.set_duration(args.time * 60)
+if args.time:
+    ss.set_duration(args.time * 60)
 
-print('wait:', ss.wait)
+time.sleep(wait)
 
-ss.run()
+for item in ss.run():
+    # not sure what to do here
+    pass

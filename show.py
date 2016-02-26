@@ -15,7 +15,7 @@ class SlideShow:
 
         self.slides = []
         self.pos = 0
-        self.wait = 5
+        self.wait = 0
         self.feh = None
 
     def interpret(self, msg):
@@ -61,13 +61,16 @@ class SlideShow:
         """ Run the show """
 
         self.show()
-        input('Press any key to start')
+
+        if not self.wait:
+            return
         
         for image in self.slides:
             wait = image.get('time', 0)
             wait = max(self.wait, wait)
             print('waiting %d seconds %s' % (
                 wait, image.get('image', '')))
+            yield image
             time.sleep(wait)
             self.next()
 
