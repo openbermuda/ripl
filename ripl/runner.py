@@ -7,7 +7,9 @@ Stuff in here probably belongs elsewhere.
 
 # fixme, make it md2py 
 import md2slides
+import slidelayout
 import json2py
+import py2json
 import slide2png
 import sys
 import os
@@ -32,7 +34,19 @@ if infile.endswith('json'):
 
 slides = mj.interpret(msg)
 
-ss = slide2png.SlideShow()
-ss.interpret(dict(slides=slides, folder=folder))
+sl = slidelayout.SlideLayout()
+slides = sl.interpret(dict(slides=slides))
+
+
+print(py2json.interpret(slides))
+
+s2png = slide2png.Slide2png()
+
+msg = dict(slides=slides,
+           gallery='../../blog/galleries')
+s2png.interpret(msg)
+
+
+
 
 
