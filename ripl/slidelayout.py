@@ -21,7 +21,7 @@ FONTSIZE = 36
 WIDTH = 1024
 HEIGHT = 768
 
-class LayoutSlide:
+class SlideLayout:
 
     def __init__(self):
 
@@ -50,7 +50,6 @@ class LayoutSlide:
         draw.font = self.font
         
         self.vertical_layout(draw, slide)
-        #print(slide)
         
         self.horizontal_layout(draw, slide)
 
@@ -165,8 +164,6 @@ class LayoutSlide:
             
             used_width = sum(x.get('width', 0) for x in items)
 
-            print('used_width', used_width)
-            
             available_width = WIDTH - (
                 used_width + ((1 + len(items)) * padding))
 
@@ -185,7 +182,6 @@ class LayoutSlide:
                 left += item['width'] + padding
 
         return
-
 
 
 
