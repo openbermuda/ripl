@@ -2,7 +2,13 @@
  Really Incredibly Point Less
 ==============================
 
-The code here started life as some simple utilities to help me write a
+RIPL == Really Incredibly Point Less
+
+or
+
+RIPL == Read Interpret Print Loop
+
+This started life as some simple utilities to help me write a
 presentation.
 
 The idea was to write something in restructured text and have some
@@ -17,10 +23,25 @@ for the slide.
 
 You can also specify an image to display, or images.
 
+
+Installation / Usage
+====================
+
+To install use pip:
+
+    $ pip install ripl
+
+
+Or clone the repo:
+
+    $ git clone https://github.com/swfiua/ripl.git
+    $ python setup.py install
+
+
 Interpretters
 =============
 
-The code so far is just a bunch of python modules which I call
+So far it is just a bunch of python modules which I call
 interpretters.
 
 Each module has a class with an interpret method.
