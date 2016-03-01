@@ -88,5 +88,9 @@ py2json and json2py.  these are done coutesy of import json.
 
 Chaining converstions and examining information loss.
 
+Get sphinx and readthedocs working here.
+
+python-snowballstemmer looks interesting, seems to be finding stems of
+words and also to be multi-lingual.
 
 
