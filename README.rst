@@ -1,17 +1,79 @@
-This is a place for simple utilities that do something.
+==============================
+ Really Incredibly Point Less
+==============================
 
-They should eventually end up in other projects.
+The code here started life as some simple utilities to help me write a
+presentation.
 
-Some of these are simple translators.  I am sure many already exist.
+The idea was to write something in restructured text and have some
+code to read the text, interpret it and turn it into a bunch of slides
+for a presentation.
 
-Until it gets complicated, I will stick with these.
+In the end I went with markdown, but only a subset of markdown is
+really supported.
 
-Only a subset of the full markups will be supported, but I think I can
-live within those.
+For each slide, you can specify a heading and then some lines of text
+for the slide.
 
-I am interested in two way conversions, that do not lose information.
+You can also specify an image to display, or images.
 
-Transformations which lose data are interesting too.
+Interpretters
+=============
+
+The code so far is just a bunch of python modules which I call
+interpretters.
+
+Each module has a class with an interpret method.
+
+py2json and json2py
+-------------------
+
+The built-in *json* module does all the work here.   These just turn
+json into python dictionaries and lists and vice-versa.
+
+md2slides.py
+------------
+
+This reads the markdown and turns it into a list of slides.  Each
+slide is just a python dictionary full of information about the
+slides.
+
+slide2png.py
+------------
+
+This takes the output from md2slides (or anything in a similar format)
+and creates a folder full of slides.
+
+As well as a bunch of image files, slide2png.py outputs a file with
+the list of slides in the slideshow.
+
+layout
+++++++
+
+I would like to strip the layout code in slide2png into a separate
+interpretter.
+
+This would just augment the incoming information with layout data.
+
+create_images
++++++++++++++
+
+The code that actually creates the images could then work with the
+layout code.
+
+
+show
+----
+
+This actually displays the slideshow.
+
+It has an option to say how many minutes the slideshow should be and
+will automatically advance the slides for you, pechakucha style.
+
+run*.py
+-------
+
+Various scripts to run everything.
 
 TODO
 ====
@@ -26,18 +88,5 @@ py2json and json2py.  these are done coutesy of import json.
 
 Chaining converstions and examining information loss.
 
-stories/talk.rst this is markdown not rest .. hmm
-
-Spares: would be good to embed them below captions.  The blank white
-slides don't really work.
-
-Multi-line captions?
-
-Start slide.  Would be good to have one.
-
-Need to truncate captions from filenames.  Just take filename without
-the suffix or folder path.
-
-Need to deal with rotation problems on some images - deep joy.
 
 
