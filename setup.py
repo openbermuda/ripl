@@ -7,7 +7,7 @@ __version__ = '0.0.1'
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 # get the dependencies and installs
@@ -22,12 +22,12 @@ setup(
     version=__version__,
     description='Really Incredibly Point Less presentation tools',
     long_description=long_description,
-    url='https://github.com/swfiua/ripl',
+    url='https://github.com/openbermuda/ripl',
     download_url='https://github.com/openbermuda/ripl/tarball/' + __version__,
     license='GPL v 3',
-    classifiers=[
+    classifiers = [
       'Development Status :: 3 - Alpha',
-      'Intended Audience :: Developers',
+      'Intended Audience :: Anybody',
       'Programming Language :: Python :: 3',
     ],
     keywords='',
