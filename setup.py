@@ -23,8 +23,8 @@ setup(
     description='Really Incredibly Point Less presentation tools',
     long_description=long_description,
     url='https://github.com/swfiua/ripl',
-    download_url='https://github.com/swfiua/ripl/tarball/' + __version__,
-    license='BSD',
+    download_url='https://github.com/openbermuda/ripl/tarball/' + __version__,
+    license='GPL v 3',
     classifiers=[
       'Development Status :: 3 - Alpha',
       'Intended Audience :: Developers',
