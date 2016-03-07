@@ -27,7 +27,7 @@ setup(
     license='GPL v 3',
     classifiers = [
       'Development Status :: 3 - Alpha',
-      'Intended Audience :: Anybody',
+      'Intended Audience :: End Users/Desktop',
       'Programming Language :: Python :: 3',
     ],
     keywords='',
