@@ -30,7 +30,7 @@ setup(
       'Intended Audience :: End Users/Desktop',
       'Programming Language :: Python :: 3',
     ],
-    keywords='',
+    keywords='presentation',
     packages=find_packages(exclude=['docs', 'tests*']),
     include_package_data=True,
     author='Johnny Gill',
