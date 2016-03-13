@@ -38,12 +38,12 @@ sl = slidelayout.SlideLayout()
 slides = sl.interpret(dict(slides=slides))
 
 
-print(py2json.interpret(slides))
+#print(py2json.interpret(slides))
 
 s2png = slide2png.Slide2png()
 
-msg = dict(slides=slides,
-           gallery='../../blog/galleries')
+msg = dict(slides=slides)
+
 s2png.interpret(msg)
 
 

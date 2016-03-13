@@ -118,8 +118,6 @@ class Slide2png:
                 print(item.get('text', ''))
                 print(item.get('image', ''))
 
-                text = item.get('text')
-
                 image_file = item.get('image')
 
                 if not image_file: continue
@@ -129,7 +127,8 @@ class Slide2png:
                     self.draw_image(image, item, source)
                 else:
                     # no image, just use text
-                    draw.text((left, top), text, fill='white')
+                    print('drawing text', image_file)
+                    draw.text((left, top), image_file, fill='white')
                         
                       
             print()
@@ -147,6 +146,7 @@ class Slide2png:
         image_file = item['image']
 
         guess = os.path.join(self.gallery, image_file)
+        print('looking for', guess)
         if os.path.exists(guess):
             return guess
 
