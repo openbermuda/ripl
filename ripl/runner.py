@@ -6,47 +6,71 @@ Stuff in here probably belongs elsewhere.
 # run script from galleries folder
 
 # fixme, make it md2py 
-import md2slides
-import slidelayout
-import json2py
-import py2json
-import slide2png
+from . import md2slides
+from . import slidelayout
+from . import json2py
+from . import py2json
+from . import slide2png
+from . import imagefind
 import sys
 import os
+import argparse
 
-infile = os.path.expanduser(
-    '~/devel/blog/stories/cat_modelling_with_python.md')
-
-folder = '.'
-if sys.argv[1:]:
-    folder = sys.argv[1]
+def main():
     
-if sys.argv[2:]:
-    infile = sys.argv[2]
+    parser = argparse.ArgumentParser()
 
-mj = md2slides
+    parser.add_argument('-md', '--markdown',
+                        type=argparse.FileType('r'))
+    parser.add_argument('-j', '--json',
+                        type=argparse.FileType('r'))
+    parser.add_argument('-g', '--gallery', nargs='*', default=['../gallery'])
+    parser.add_argument('-o', '--output', nargs='*', default=['.'])
+    parser.add_argument('--slide')
+    parser.add_argument('--show')
 
-msg = open(infile)
+    args = parser.parse_args()
 
-if infile.endswith('json'):
-    mj = json2py
-    msg = open(infile).read()
+    if args.show:
+        
 
-slides = mj.interpret(msg)
+    galleries = args.gallery
 
-sl = slidelayout.SlideLayout()
-slides = sl.interpret(dict(slides=slides))
+    folder = args.output
 
+    mj = md2slides
 
-#print(py2json.interpret(slides))
+    if args.markdown:
+        msg = args.markdown
+        mj = md2slides
 
-s2png = slide2png.Slide2png()
+    if args.json:
+        mj = json2py
+        msg = open(infile).read()
 
-msg = dict(slides=slides)
+    slides = mj.interpret(msg)
 
-s2png.interpret(msg)
+    sl = slidelayout.SlideLayout()
+    slides = sl.interpret(dict(slides=slides))
 
+    s2png = slide2png.Slide2png()
 
+    msg = dict(slides=slides, gallery=galleries)
+
+    if args.slide:
+        todo = []
+        for slide in slides:
+            if args.slide in slide['heading']:
+                todo.append(slide)
+        msg['slides'] = todo
+    else:
+        msg['logname'] = 'slides.txt'
+    
+    s2png.interpret(msg)
+
+if __name__ == '__main__':
+
+    main()
 
 
 
