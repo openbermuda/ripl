@@ -1,8 +1,19 @@
 """
-Take a python object and turn it into json.
+Look for an image based on its name.
 
-World's simplest interpreter.
+Searches through folders looking for image files.
+
+Looks for an exact match.
+
+Failing that, anything that contains part of the file name.
+
+If there are full matches, picks one at random.
+
+If there are no full matches picks one at random from the partial
+matches.
+
 """
+import os
 from numpy.random import randint
 
 class ImageFind:
@@ -12,7 +23,7 @@ class ImageFind:
         self.folders = set()
         self.images = []
 
-        self.exts = ['gif', 'png', 'jpg']
+        self.exts = ['.gif', '.png', '.jpg']
 
     def add_folder(self, folder):
         """ Add a folder scan images there """
@@ -23,7 +34,7 @@ class ImageFind:
         
         for subfolder, junk, filenames in os.walk(folder):
             for filename in filenames:
-                name, ext = os.path.split(filename)
+                name, ext = os.path.splitext(filename)
                 if ext in self.exts:
                     self.images.append(
                         os.path.join(subfolder, filename))
@@ -42,7 +53,7 @@ class ImageFind:
         for gallery in msg.get('galleries', []):
             self.add_folder(gallery)
             
-        image_file = msg['image']
+        image_file = msg.get('image')
         if not image_file: return
 
         return self.find_image(image_file)
@@ -51,12 +62,15 @@ class ImageFind:
         
         matches = []
         partials = []
+
+        folder, filename  = os.path.split(image_file)
+        base, ext = os.path.splitext(filename)
         for image in self.images:
             if image.endswith(image_file):
                 matches.append(image)
                 continue
 
-            if image_file in image:
+            if base in image:
                 partials.append(image)
 
         if matches:
