@@ -87,7 +87,7 @@ class Slide2png:
         
         left, top = heading['top'], heading['left']
         
-        draw.text((left, top), heading['text'], fill='white')
+        draw.text((left, top), heading['text'], fill='gold')
         print(heading['text'])
 
         for row in rows:
