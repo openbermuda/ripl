@@ -11,6 +11,8 @@ import os
 
 from PIL import Image, ImageDraw, ImageFont
 
+from . import imagefind
+
 FONT = '/usr/share/fonts/TTF/Vera.ttf'
 FONTSIZE = 36
 WIDTH = 1024
@@ -25,24 +27,22 @@ class Slide2png:
         self.cache = 'show'
         self.font = ImageFont.truetype(FONT, FONTSIZE)
 
+        self.finder = imagefind.FindImage()
+
     def interpret(self, msg):
         """ Load input """
         slides = msg.get('slides', [])
         self.cache = msg.get('folder', '.')
-        self.gallery = msg.get('gallery', '..')
+        self.gallery = msg.get('gallery', ['..'])
+        self.finder.interpret(dict(galleries=gallery))
 
         # in case slides is a generator, turn it into a list
         # since I am going to go through it twice
         slides = [slide for slide in slides]
 
-        # Write slides.txt with list of slides
-        with open(self.cache + '/slides.txt', 'w') as logfile:
-            for slide in slides:
-                heading = slide['heading']['text']
-                filename = self.get_image_name(heading)
-                
-                print('%s,%d' % (filename, slide.get('time', 0)),
-                      file=logfile)
+        logname = msg.get('logname')
+        if logname:
+            self.write_slide_list(logname)
 
         # Now spin through slides again
         for slide in slides:
@@ -56,6 +56,17 @@ class Slide2png:
 
         # fixme -- just return info in slides.txt as list of dicts
         return
+
+    def write_slide_list(self, logname):
+        """ Write list of slides to logfile """
+        # Write slides.txt with list of slides
+        with open(self.cache + logname, 'w') as logfile:
+            for slide in slides:
+                heading = slide['heading']['text']
+                filename = self.get_image_name(heading)
+                
+                print('%s,%d' % (filename, slide.get('time', 0)),
+                      file=logfile)
 
     def draw_slide(self, slide):
         """ Return layout information for slide """
@@ -144,14 +155,7 @@ class Slide2png:
         interpreter that finds things?
         """
         image_file = item['image']
-
-        guess = os.path.join(self.gallery, image_file)
-        print('looking for', guess)
-        if os.path.exists(guess):
-            return guess
-
-        return None
-        
+        return self.finder.find_image(image_file)
 
     def draw_image(self, image, item, source):
         """ Add an image to the image """
