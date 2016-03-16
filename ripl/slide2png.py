@@ -7,8 +7,6 @@ Each row is a list of text strings or image names.
 
 This uses PIL to create an image for each slide.
 """
-import os
-
 from PIL import Image, ImageDraw, ImageFont
 
 from . import imagefind
@@ -27,14 +25,14 @@ class Slide2png:
         self.cache = 'show'
         self.font = ImageFont.truetype(FONT, FONTSIZE)
 
-        self.finder = imagefind.FindImage()
+        self.finder = imagefind.ImageFind()
 
     def interpret(self, msg):
         """ Load input """
         slides = msg.get('slides', [])
         self.cache = msg.get('folder', '.')
         self.gallery = msg.get('gallery', ['..'])
-        self.finder.interpret(dict(galleries=gallery))
+        self.finder.interpret(dict(galleries=self.gallery))
 
         # in case slides is a generator, turn it into a list
         # since I am going to go through it twice
@@ -42,7 +40,7 @@ class Slide2png:
 
         logname = msg.get('logname')
         if logname:
-            self.write_slide_list(logname)
+            self.write_slide_list(logname, slides)
 
         # Now spin through slides again
         for slide in slides:
@@ -57,7 +55,7 @@ class Slide2png:
         # fixme -- just return info in slides.txt as list of dicts
         return
 
-    def write_slide_list(self, logname):
+    def write_slide_list(self, logname, slides):
         """ Write list of slides to logfile """
         # Write slides.txt with list of slides
         with open(self.cache + logname, 'w') as logfile:
@@ -133,6 +131,7 @@ class Slide2png:
 
                 if not image_file: continue
 
+                print(item)
                 source = self.find_image(item)
                 if source:
                     self.draw_image(image, item, source)

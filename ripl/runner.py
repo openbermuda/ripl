@@ -20,7 +20,7 @@ def main():
     
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-md', '--markdown',
+    parser.add_argument('-m', '--markdown',
                         type=argparse.FileType('r'))
     parser.add_argument('-j', '--json',
                         type=argparse.FileType('r'))
@@ -30,9 +30,6 @@ def main():
     parser.add_argument('--show')
 
     args = parser.parse_args()
-
-    if args.show:
-        
 
     galleries = args.gallery
 
@@ -60,7 +57,9 @@ def main():
     if args.slide:
         todo = []
         for slide in slides:
-            if args.slide in slide['heading']:
+            heading = slide['heading']['text'].lower()
+            if args.slide in heading:
+                print('processing:', heading)
                 todo.append(slide)
         msg['slides'] = todo
     else:
