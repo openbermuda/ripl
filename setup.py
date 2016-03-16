@@ -33,6 +33,7 @@ setup(
     entry_points = {
         'console_scripts': [
             'ripl = ripl.runner:main',
+            'riplshow = ripl.run:main',
             ],
         },
     keywords='presentation',

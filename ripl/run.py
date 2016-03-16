@@ -8,60 +8,65 @@ import sys
 import time
 
 # fixme, make it md2py 
-import md2py
-import json2py
-import show
+from . import md2py
+from . import json2py
+from . import show
 
 import argparse
 
-parser = argparse.ArgumentParser()
+def main():
 
-parser.add_argument('-t', '--time',
-                    default=0, type=int,
-                    help='time for slideshow in minutes')
-parser.add_argument('-f', '--folder',
-                    default='.',
-                    help="folder of slides")
-parser.add_argument('-s', '--slides',
-                    default='slides.txt',
-                    help='list of slides to show')
-parser.add_argument('-w', '--wait',
-                    default=0, type=int,
-                    help='time to wait for slideshow')
+    parser = argparse.ArgumentParser()
 
-
-args = parser.parse_args()
-
-folder = args.folder
-infile = args.slides
-wait = args.wait
+    parser.add_argument('-t', '--time',
+                        default=0, type=int,
+                        help='time for slideshow in minutes')
+    parser.add_argument('-f', '--folder',
+                        default='.',
+                        help="folder of slides")
+    parser.add_argument('-s', '--slides',
+                        default='slides.txt',
+                        help='list of slides to show')
+    parser.add_argument('-w', '--wait',
+                        default=0, type=int,
+                        help='time to wait for slideshow')
 
 
-msg = open(infile)
+    args = parser.parse_args()
 
-mj = md2py
+    folder = args.folder
+    infile = args.slides
+    wait = args.wait
 
-if infile.endswith('json'):
-    mj = json2py
-    msg = open(infile).read()
 
-slides = mj.interpret(msg)
+    msg = open(infile)
 
-print("Number of slides:", len(slides))
+    mj = md2py
 
-print()
-print(slides[0]['image'])
-print()
+    if infile.endswith('json'):
+        mj = json2py
+        msg = open(infile).read()
 
-ss = show.SlideShow()
+    slides = mj.interpret(msg)
 
-ss.interpret(dict(slides=slides, captions=folder))
+    print("Number of slides:", len(slides))
 
-if args.time:
-    ss.set_duration(args.time * 60)
+    print()
+    print(slides[0]['image'])
+    print()
 
-time.sleep(wait)
+    ss = show.SlideShow()
 
-for item in ss.run():
-    # not sure what to do here
-    pass
+    ss.interpret(dict(slides=slides, captions=folder))
+
+    if args.time:
+        ss.set_duration(args.time * 60)
+
+    time.sleep(wait)
+
+    for item in ss.run():
+        # not sure what to do here
+        pass
+
+if __name__ == '__main__':
+    main()
