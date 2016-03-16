@@ -30,6 +30,11 @@ setup(
       'Intended Audience :: End Users/Desktop',
       'Programming Language :: Python :: 3',
     ],
+    entry_points = {
+        'console_scripts': [
+            'ripl = ripl.runner:main',
+            ],
+        },
     keywords='presentation',
     packages=find_packages(exclude=['docs', 'tests*']),
     include_package_data=True,
