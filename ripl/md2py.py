@@ -67,7 +67,6 @@ class Mark2Py:
             
             # any Markdown heading is just a caption, no image
             if heading:
-                print(line)
                 record['heading'] = True
                 record['caption'] = line[1:].strip()
 

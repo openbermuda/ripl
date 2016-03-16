@@ -58,7 +58,7 @@ class Slide2png:
     def write_slide_list(self, logname, slides):
         """ Write list of slides to logfile """
         # Write slides.txt with list of slides
-        with open(self.cache + logname, 'w') as logfile:
+        with open('%s/%s' % (self.cache, logname), 'w') as logfile:
             for slide in slides:
                 heading = slide['heading']['text']
                 filename = self.get_image_name(heading)
@@ -82,24 +82,18 @@ class Slide2png:
     def draw_slide_text(self, draw, slide):
 
         heading = slide['heading']
-        print(heading['text'])
         rows = slide['rows']
 
         
         left, top = heading['top'], heading['left']
         
         draw.text((left, top), heading['text'], fill='white')
+        print(heading['text'])
 
         for row in rows:
             for item in row['items']:
                 top, left = item['top'], item['left']
                 
-                print('tl', item['top'], item['left'])
-                print('wh', item['width'], item['height'])
-
-                print(item.get('text', ''))
-                print(item.get('image', ''))
-
                 text = item.get('text')
 
                 if not text:
@@ -108,8 +102,6 @@ class Slide2png:
                 draw.text((left, top), text, fill='white')
 
                       
-            print()
-
     def draw_slide_images(self, draw, slide, image):
 
         heading = slide['heading']
@@ -121,23 +113,18 @@ class Slide2png:
             for item in row['items']:
                 top, left = item['top'], item['left']
                 
-                print('tl', item['top'], item['left'])
-                print('wh', item['width'], item['height'])
-
-                print(item.get('text', ''))
-                print(item.get('image', ''))
-
                 image_file = item.get('image')
 
                 if not image_file: continue
 
-                print(item)
                 source = self.find_image(item)
                 if source:
+                    print('Using {} for {}'.format(
+                        source, item['image']))
+                    
                     self.draw_image(image, item, source)
                 else:
                     # no image, just use text
-                    print('drawing text', image_file)
                     draw.text((left, top), image_file, fill='white')
                         
                       
@@ -169,13 +156,8 @@ class Slide2png:
         wratio = width / iwidth
         hratio = height / iheight
 
-        print(width, height, iwidth, iheight)
-
         ratio = min(wratio, hratio)
-        print(wratio, hratio, ratio)
 
-        print('resizing %s %6.4f' % (image_file, ratio))
-        
         img = img.resize((int(iwidth * ratio),
                           int(iheight * ratio)),
                          Image.ANTIALIAS)
@@ -191,8 +173,6 @@ class Slide2png:
         left += (width - iwidth) // 2
         
         # now paste the image
-        print('pasting %s' % image_file)
-        print(left, top)
         image.paste(img, (left, top))
         
 
