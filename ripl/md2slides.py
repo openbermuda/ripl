@@ -84,10 +84,11 @@ class Mark2Slide:
                 last_heading = heading
                     
                 rows = []
+                slide = {}
                 if heading < 2:
-                    slide = dict(
+                    slide.update(dict(
                         heading = dict(text=line.strip('#')),
-                        rows = rows)
+                        rows = rows))
 
                 continue
 

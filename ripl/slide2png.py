@@ -128,7 +128,7 @@ class Slide2png:
                     draw.text((left, top), image_file, fill='white')
                         
                       
-            print()
+        print()
 
 
     def find_image(self, item):
