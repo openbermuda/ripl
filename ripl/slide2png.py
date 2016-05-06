@@ -146,7 +146,12 @@ class Slide2png:
 
     def rotate(self, img):
         """ Rotate image if exif says it needs it """
-        exif = image2exif.get_exif(img)
+        try:
+            exif = image2exif.get_exif(img)
+        except AttributeError:
+            # image format doesn't support exif
+            return img
+        
         orientation = exif.get('Orientation', 1)
 
         if orientation == 6:
