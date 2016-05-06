@@ -154,7 +154,10 @@ class Slide2png:
         
         orientation = exif.get('Orientation', 1)
 
-        if orientation == 6:
+        landscape = img.height < img.width
+        
+        if orientation == 6 and landscape:
+            print("ROTATING")
             return img.rotate(-90)
 
         return img
