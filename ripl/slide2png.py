@@ -9,7 +9,7 @@ This uses PIL to create an image for each slide.
 """
 from PIL import Image, ImageDraw, ImageFont
 
-from . import imagefind
+from . import imagefind, image2exif
 
 FONT = '/usr/share/fonts/TTF/Vera.ttf'
 FONTSIZE = 36
@@ -143,13 +143,27 @@ class Slide2png:
         image_file = item['image']
         return self.finder.find_image(image_file)
 
+
+    def rotate(self, img):
+        """ Rotate image if exif says it needs it """
+        exif = image2exif.get_exif(img)
+        orientation = exif.get('Orientation', 1)
+
+        if orientation == 6:
+            return img.rotate(-90)
+
+        return img
+        
+
     def draw_image(self, image, item, source):
         """ Add an image to the image """
         top, left = item['top'], item['left']
         width, height = item['width'], item['height']
         image_file = item['image']
-        
+
         img = Image.open(source)
+
+        img = self.rotate(img)
 
         iwidth, iheight = img.size
 
