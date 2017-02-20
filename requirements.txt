@@ -1,2 +1,2 @@
-pypi-publisher
-img2pdf
+#pypi-publisher
+#img2pdf
