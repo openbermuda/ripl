@@ -14,7 +14,7 @@ import pandas
 import getopt
 
 
-class Csv2Json
+class Csv2Json:
 
     def __init__(self):
         
